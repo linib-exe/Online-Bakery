@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Custom Bakery Order</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">  <!-- Bootstrap CSS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>  <!-- jQuery -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>  <!-- Bootstrap JS -->
+    <style>
+        .form-container {
+            background-color: #fff7e6;  
+            padding: 20px;  
+            border-radius: 10px;  
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            margin-top: 50px;  
+        }
+        .btn-primary {
+            background-color: #ffcc80;  
+            border: none;
+        }
+        .text-center {
+            text-align: center;  
+        }
+    </style>
+</head>
+<body>
+    <div class="container d-flex justify-content-center">  <!-- Center container -->
+        <div class="form-container">  <!-- Card-like container for form -->
+            <h1>Place a Custom Bakery Order</h1>
+            
+            <!-- Custom order form -->
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}  <!-- Display the form fields -->
+                <button type="submit" class="btn btn-primary btn-block">Place Custom Order</button>  <!-- Full-width submit button -->
+            </form>
+            
+            <p class="text-center">  <!-- Centered text -->
+                <a href="{% url 'home' %}">Back to Home</a>  <!-- Link back to the home page -->
+            </p>
+        </div>
+    </div>
+</body>
+</html>

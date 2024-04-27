@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bakery Home</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">  <!-- Bootstrap CSS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>  <!-- jQuery -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>  <!-- Bootstrap JS -->
+    <style>
+        .product-card {
+            background-color: #fff7e6;  /* Light beige for a bakery feel */
+            padding: 20px;  /* Consistent padding */
+            border-radius: 10px;  /* Rounded corners */
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);  /* Light shadow for depth */
+            margin-bottom: 20px;  /* Spacing between cards */
+            text-align: center;  /* Centered text for uniformity */
+            height: 350px;  /* Fixed height for consistent card size */
+            overflow: hidden;  /* Prevent content overflow */
+        }
+        .product-image {
+            width: 100%;  /* Full-width images */
+            height: 150px;  /* Fixed height for images */
+            object-fit: cover;  /* Properly crop and scale images */
+            border-radius: 10px;  /* Rounded corners for images */
+        }
+        .place-order-btn {
+            background-color: #ffcc80;  /* Matching theme color for buttons */
+            color: #5c3317;  /* Dark brown text */
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            text-transform: uppercase;  /* Capitalized text */
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #ffcc80;">  <!-- Warm bakery-themed color -->
+        <a class="navbar-brand" href="{% url 'home' %}">Bakery</a>  <!-- Home link -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">  <!-- Right-aligned navbar -->
+                {% if user.is_authenticated %}  <!-- If the user is logged in -->
+                <li class="nav-item">
+                    <span class="nav-link">Hello, {{ user.username }}</span>  <!-- Display logged-in user's name -->
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'custom_order' %}">Custom Order</a>  <!-- Custom order link -->
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user_orders' %}">My Orders</a>  <!-- User's orders -->
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>  <!-- Logout link -->
+                </li>
+                {% else %}  <!-- If the user is not logged in -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Login</a>  <!-- Login link -->
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'signup' %}">Signup</a>  <!-- Signup link -->
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main content section -->
+    <div class="container mt-5">  <!-- Bootstrap container with top margin -->
+        <h1>Welcome to Our Bakery</h1>
+        <p>Browse our delicious products:</p>
+        
+        <!-- Main product list with consistent card design and place order button -->
+        <div class="row">  <!-- Organize products in a Bootstrap row -->
+            {% for product in page_obj %}
+            <div class="col-md-4 mb-3">  <!-- One-third-width columns for consistent layout -->
+                <div class="product-card">  <!-- Consistent card design -->
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">  <!-- Product image -->
+                    {% endif %}
+                    <h4>{{ product.name }}</h4>
+                    <p>{{ product.description|truncatewords:20 }}</p>  <!-- Truncate long descriptions -->
+                    <p>Price: Rs.{{ product.price }}</p>  <!-- Product price -->
+                    <a href="{% url 'place_order' product.id %}" class="place-order-btn">Place Order</a>  <!-- Place order button -->
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination controls for the main product list -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">  <!-- Centered pagination -->
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+
+        <!-- Recommended products section -->
+        <h2>Recommended Products</h2>  <!-- Section for recommended products -->
+        <div class="row">  <!-- Organize recommended products in a Bootstrap row -->
+            {% for product in recommended_products %}
+            <div class="col-md-4 mb-3">  <!-- One-third-width columns for consistent layout -->
+                <div class="product-card">  <!-- Consistent card design -->
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">  <!-- Product image -->
+                    {% endif %}
+                    <h4>{{ product.name }}</h4>
+                    <p>{{ product.description|truncatewords:20 }}</p>  <!-- Truncate long descriptions -->
+                    <p>Price: Rs.{{ product.price }}</p>  <!-- Product price -->
+                    <a href="{% url 'place_order' product.id %}" class="place-order-btn">Place Order</a>  <!-- Place order button -->
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

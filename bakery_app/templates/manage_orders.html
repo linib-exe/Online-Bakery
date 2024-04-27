@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Manage Orders</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">  <!-- Bootstrap CSS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>  <!-- jQuery -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>  <!-- Bootstrap JS -->
+    <style>
+        .order-card {
+            background-color: #fff7e6;  
+            padding: 20px;  
+            border-radius: 10px;  
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            margin-bottom: 20px;  
+        }
+        .update-form {
+            margin-top: 10px;  
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">  <!-- Bootstrap container with top margin -->
+        <h1>Manage Orders</h1>
+
+        <div class="row">  <!-- Organize orders in a Bootstrap row -->
+            {% for order in page_obj %}
+            <div class="col-md-6">  <!-- Half-width columns for each order -->
+                <div class="order-card">  <!-- Card-like structure for each order -->
+                    <h4>Order Details</h4>
+                    <p>
+                        {% if order.product %}  <!-- If it's a standard order -->
+                        Product: {{ order.product.name }} <br>
+                        Quantity: {{ order.quantity }} <br>
+                        {% else %}  <!-- If it's a custom order -->
+                        Weight: {{ order.weight }}g <br>
+                        Flavor: {{ order.flavor }} <br>
+                        Shape: {{ order.shape }} <br>
+                        {% endif %}
+                        Total Price: ${{ order.total_price }} <br>
+                        Payment Status: {{ order.payment_status }} <br>
+                        Delivery Status: {{ order.delivery_status }} <br>
+                        Order Date: {{ order.order_date }} <br>
+                    </p>
+                    
+                    <!-- Form to update payment and delivery statuses -->
+                    <form method="post" class="update-form"> 
+                        {% csrf_token %}
+                        <input type="hidden" name="order_id" value="{{ order.id }}">  <!-- Hidden input for order ID -->
+                        <label for="payment_status">Payment Status:</label>
+                        <select name="payment_status" id="payment_status"> 
+                            <option value="paid" {% if order.payment_status == 'paid' %}selected{% endif %}>Paid</option>
+                            <option value="pending" {% if order.payment_status == 'pending' %}selected{% endif %}>Pending</option>
+                        </select>
+                        <label for="delivery_status">Delivery Status:</label>
+                        <select name="delivery_status" id="delivery_status"> 
+                            <option value="delivered" {% if order.delivery_status == 'delivered' %}selected{% endif %}>Delivered</option>
+                            <option value="in transit" {% if order.delivery_status == 'in transit' %}selected{% endif %}>In Transit</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary">Update Order</button>  <!-- Update order button -->
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination controls -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">  <!-- Centered pagination -->
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Place an Order</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">  <!-- Bootstrap CSS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>  <!-- jQuery -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>  <!-- Bootstrap JS -->
+    <style>
+        .order-container {
+            background-color: #fff7e6;  
+            border: 1px solid #ffcc80;  
+            padding: 20px;  
+            border-radius: 10px;  
+        }
+        .btn-primary {
+            background-color: #ffcc80;  
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">  <!-- Bootstrap container with top margin -->
+        <div class="order-container">  <!-- Card-like container for the order form -->
+            <h1>Place an Order for {{ product.name }}</h1>
+            <p>Price: Rs.{{ product.price }}</p>
+
+            <!-- Order form -->
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">  <!-- Bootstrap form group for styling -->
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" name="quantity" min="1" required class="form-control" placeholder="Enter quantity">  <!-- Form control for consistent styling -->
+                </div>
+                <button type="submit" class="btn btn-primary">Place Order</button>  <!-- Styled button -->
+            </form>
+        </div>
+    </div>
+</body>
+</html>

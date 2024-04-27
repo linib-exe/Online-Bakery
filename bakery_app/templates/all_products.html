@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>All Products</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">  <!-- Bootstrap CSS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>  <!-- jQuery -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>  <!-- Bootstrap JS -->
+    <style>
+        .product-card {
+            background-color: #fff7e6;  
+            padding: 20px;  
+            border-radius: 10px;  
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            margin-bottom: 20px;  
+            text-align: center;  
+        }
+        .product-image {
+            border-radius: 10px;  
+            max-height: 200px;  
+            object-fit: cover;  
+        }
+        .btn {
+            margin: 5px;  
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">  <!-- Bootstrap container with top margin -->
+        <h1>All Products</h1>
+        
+        <div class="row">  <!-- Organize products in a Bootstrap row -->
+            {% for product in page_obj %}
+            <div class="col-md-4 mb-3">  <!-- One-third-width columns for products -->
+                <div class="product-card">  <!-- Card-like structure for each product -->
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image img-fluid">  <!-- Product image -->
+                    {% endif %}
+                    <h4>{{ product.name }}</h4>  <!-- Product name -->
+                    <p>{{ product.description }}</p>  <!-- Product description -->
+                    <p>Price: Rs.{{ product.price }}</p>  <!-- Product price -->
+                    
+                    <!-- Admin functionalities (optional) -->
+                    {% if user.is_staff %}  <!-- Check if user is admin -->
+                    <a href="{% url 'update_product' product.id %}" class="btn btn-warning">Edit</a>  <!-- Edit product -->
+                    <a href="{% url 'delete_product' product.id %}" class="btn btn-danger">Delete</a>  <!-- Delete product -->
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination controls -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">  <!-- Centered pagination -->
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</body>
+</html>

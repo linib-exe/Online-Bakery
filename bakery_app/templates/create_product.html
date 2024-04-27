@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Create a Product</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">  <!-- Bootstrap CSS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>  <!-- jQuery -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>  <!-- Bootstrap JS -->
+    <style>
+        .form-container {
+            background-color: #fff7e6;  
+            padding: 20px;  
+            border: 1px solid #ffcc80;
+            border-radius: 10px;  
+        }
+        .btn-primary {
+            background-color: #ffcc80;  
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">  <!-- Bootstrap container with top margin -->
+        <div class="form-container">  <!-- Container with styling -->
+            <h1>Create a New Product</h1>
+
+            <!-- Product creation form -->
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">  <!-- Group for better structure -->
+                    <label for="name">Product Name:</label>
+                    <input type="text" name="name" required class="form-control" placeholder="Enter product name">  <!-- Form control for consistent styling -->
+                </div>
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <textarea name="description" required class="form-control" placeholder="Enter product description" rows="3"></textarea>  <!-- Styled textarea -->
+                </div>
+                <div class="form-group">
+                    <label for="price">Price:</label>
+                    <input type="number" name="price" step="0.01" required class="form-control" placeholder="Enter price">  <!-- Styled input for price -->
+                </div>
+                <div class="form-group">
+                    <label for="image">Image:</label>
+                    <input type="file" name="image" class="form-control-file">  <!-- File input styling -->
+                </div>
+                <button type="submit" class="btn btn-primary">Create Product</button>  <!-- Styled button -->
+            </form>
+        </div>
+    </div>
+</body>
+</html>
